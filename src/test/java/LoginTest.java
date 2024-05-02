@@ -39,7 +39,9 @@ public class LoginTest {
 
     @DataProvider(name = "loginData")
     private Object[][] TestDataFeed(){
+
         ReadExcelFile config = new ReadExcelFile("takeAlotSheet.xlsx");
+
         int rows = config.getRowCount(1);
         Object[][] regData = new Object[rows][2];
 

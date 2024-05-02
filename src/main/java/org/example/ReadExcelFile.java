@@ -21,10 +21,7 @@ public class ReadExcelFile {
         }
     }
 
-//    public String getData(int sheetIndex, int row, int column){
-//        sheet = wb.getSheetAt(sheetIndex);
-//        return sheet.getRow(row).getCell(column).getStringCellValue();
-//    }
+
     public String getData(int sheetIndex, int row, int column) {
         sheet = wb.getSheetAt(sheetIndex);
         Cell cell = sheet.getRow(row).getCell(column);

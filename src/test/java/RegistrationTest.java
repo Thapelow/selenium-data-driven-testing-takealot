@@ -42,6 +42,8 @@ public class RegistrationTest {
         WebElement closeButton = driver.findElement(By.cssSelector("button.modal-module_close-button_asjao[data-ref='modal-close-button']"));
 
         Assert.assertTrue(closeButton.isDisplayed(), "Close button element is displayed after registering.");
+        driver.get("http://takealot.com");
+        Thread.sleep(5000);
 
     }
 
