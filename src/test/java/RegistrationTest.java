@@ -6,48 +6,47 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 import java.time.Duration;
 
 public class RegistrationTest {
     private static WebDriver driver;
-    private static WebDriverWait wait;
-    private static final String URL = "http://takealot.com";
+    private static final String URL = "https://www.takealot.com/account/register?returnTo=https%3A%2F%2Fwww.takealot.com%2Faccount";
 
-    @BeforeMethod
+    @BeforeClass
     public static void setUpDriver(){
         WebDriverManager.chromedriver().setup();
         driver = new ChromeDriver();
     }
 
     @Test(dataProvider = "registrationData")
-    public void registerNewUser(String firstName, String lastName, String email, String password, String phoneNumber){
+    public void registerNewUser(String firstName, String lastName, String email, String password, String phoneNumber) throws InterruptedException {
         driver.get(URL);
 
-        wait = new WebDriverWait(driver, Duration.ofSeconds(3));
-        driver.findElement(By.linkText("Register")).click();
-        wait = new WebDriverWait(driver, Duration.ofSeconds(3));
-
+        Thread.sleep(5000);
         driver.findElement(By.name("first_name")).sendKeys(firstName);
         driver.findElement(By.name("last_name")).sendKeys(lastName);
         driver.findElement(By.name("email")).sendKeys(email);
         driver.findElement(By.name("new_password")).sendKeys(password);
-        driver.findElement(By.name("mobile_country_code")).sendKeys(phoneNumber);
-        driver.findElement(By.cssSelector("button[type='submit']")).click();
+        Thread.sleep(5000);
+        driver.findElement(By.cssSelector("input[name='mobile_national_number']")).sendKeys(phoneNumber);
+        Thread.sleep(5000);
+        WebElement continueButton = driver.findElement(By.cssSelector("button.button.submit-action[data-ref='dynaform-submit-button']"));
+        continueButton.click();
 
-        wait = new WebDriverWait(driver, Duration.ofSeconds(3));
-        WebElement verifyElement = driver.findElement(By.className("cell auto"));
 
-        Assert.assertTrue(verifyElement.isDisplayed());
+        Thread.sleep(5000);
+
+
+        WebElement closeButton = driver.findElement(By.cssSelector("button.modal-module_close-button_asjao[data-ref='modal-close-button']"));
+
+        Assert.assertTrue(closeButton.isDisplayed(), "Close button element is displayed after registering.");
+
     }
 
-
     @DataProvider(name = "registrationData")
-    public Object[][] TestDataFeed(){
+    private Object[][] TestDataFeed(){
 
         ReadExcelFile config = new ReadExcelFile("takeAlotSheet.xlsx");
         int rows = config.getRowCount(0);
@@ -64,7 +63,7 @@ public class RegistrationTest {
         return  regData;
     }
 
-    @AfterMethod
+    @AfterClass
     public void cleanup(){
         driver.quit();
     }
