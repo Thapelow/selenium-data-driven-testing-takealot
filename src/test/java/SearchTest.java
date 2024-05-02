@@ -3,12 +3,16 @@ import org.example.ReadExcelFile;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class SearchTest {
 
@@ -21,26 +25,38 @@ public class SearchTest {
         driver = new ChromeDriver();
     }
 
-    @Test(dataProvider = "loginData")
-    public void testLogin(String item, String brand, String color) throws InterruptedException {
+    @Test(dataProvider = "searchData")
+    public void testSearch(String item, String brand, String color) throws InterruptedException {
         driver.get(URL);
 
         Thread.sleep(5000);
 
         driver.findElement(By.cssSelector("input[name='search']")).sendKeys(item,Keys.ENTER);
 
-        driver.findElement(By.name("email")).sendKeys(email);
-        driver.findElement(By.name("password")).sendKeys(password);
-        Thread.sleep(5000);
-        driver.findElement(By.cssSelector("button.button.submit-action[data-ref='dynaform-submit-button']")).click();
         Thread.sleep(5000);
 
-        driver.get("https://www.takealot.com/account/personal-details");
+        driver.findElement(By.cssSelector("label[for='filter_"+brand+"_" + brand + "']")).click();
 
-        Assert.assertEquals(driver.getCurrentUrl(), "https://www.takealot.com/account/personal-details", "Failed to login");
+        Thread.sleep(3000);
+
+        driver.findElement(By.xpath("//span[text()='" + color + "]")).click();
+
+        Thread.sleep(5000);
+
+        List<WebElement> itemElements = driver.findElements(By.cssSelector("a.product-anchor"));
+        List<String> actualItems = itemElements.stream()
+                .map(element -> element.getText().toLowerCase() + element.getAttribute("href").toLowerCase())
+                .collect(Collectors.toList());
+
+        List<String> expectedItems = actualItems.stream()
+                .filter(el -> el.contains(item.toLowerCase()) && el.contains(brand.toLowerCase()) && el.contains(color.toLowerCase()))
+                .collect(Collectors.toList());
+
+        Assert.assertEquals(expectedItems, actualItems);
+
     }
 
-    @DataProvider(name = "loginData")
+    @DataProvider(name = "searchData")
     private Object[][] TestDataFeed(){
         ReadExcelFile config = new ReadExcelFile("takeAlotSheet.xlsx");
         int rows = config.getRowCount(2);
