@@ -57,8 +57,9 @@ public class SearchTest {
     }
 
     @DataProvider(name = "searchData")
-    private Object[][] TestDataFeed(){
+    private Object[][] testDataFeed(){
         ReadExcelFile config = new ReadExcelFile("takeAlotSheet.xlsx");
+
         int rows = config.getRowCount(2);
         Object[][] regData = new Object[rows][2];
 
