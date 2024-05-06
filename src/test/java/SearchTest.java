@@ -48,13 +48,31 @@ public class SearchTest {
                 .map(element -> element.getText().toLowerCase() + element.getAttribute("href").toLowerCase())
                 .collect(Collectors.toList());
 
+
         List<String> expectedItems = actualItems.stream()
                 .filter(el -> el.contains(item.toLowerCase()) && el.contains(brand.toLowerCase()) && el.contains(color.toLowerCase()))
                 .collect(Collectors.toList());
 
         Assert.assertEquals(expectedItems, actualItems);
+        addToCart();
 
     }
+
+    @Test
+    public void addToCart(){
+        List<WebElement> addToCartIcons = driver.findElements(By.cssSelector("button.add-to-cart-button"));
+
+        if (!addToCartIcons.isEmpty()){
+            addToCartIcons.get(0).click();
+        }
+
+        driver.get("https://www.takealot.com/cart");
+        List<WebElement> cartItems = driver.findElements(By.cssSelector("div.cart-item-container-module_item_3Vkqc"));
+
+        Assert.assertNotNull(cartItems, "Cart item element not found");
+    }
+
+
 
     @DataProvider(name = "searchData")
     private Object[][] testDataFeed(){
