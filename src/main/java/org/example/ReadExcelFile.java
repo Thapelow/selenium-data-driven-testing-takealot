@@ -11,6 +11,12 @@ public class ReadExcelFile {
     XSSFWorkbook wb;
     XSSFSheet sheet;
 
+    public static void main(String[] args) {
+        ReadExcelFile readExcelFile = new ReadExcelFile("takeAlotSheet.xlsx");
+        String data = readExcelFile.getData(2,0,2);
+        System.out.println(data);
+    }
+
     public ReadExcelFile(String excelPath){
         try {
             File file = new File(excelPath);

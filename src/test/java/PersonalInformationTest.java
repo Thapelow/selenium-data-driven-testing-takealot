@@ -34,21 +34,36 @@ public class PersonalInformationTest {
 
         driver.get("https://www.takealot.com/account/personal-details");
 
-        driver.findElement(By.cssSelector(".button.ghost.blue[data-ref='Your Name-button']")).click();
+        Thread.sleep(5000);
 
-        WebElement firstNameEdit = driver.findElement(By.id("name_lastName"));
+
+        WebElement nameButtonBanner = driver.findElement(By.cssSelector("div.button-banner[data-ref='Your Name-button']"));
+
+        Thread.sleep(3000);
+        nameButtonBanner.findElement(By.cssSelector("div.button.ghost.blue")).click();
+        Thread.sleep(2000);
+
+        WebElement firstNameEdit = driver.findElement(By.id("name_firstName"));
+
         firstNameEdit.clear();
+
         firstNameEdit.sendKeys(firstName);
+        Thread.sleep(3000);
 
         WebElement lastNameEdit = driver.findElement(By.id("name_lastName"));
+        Thread.sleep(3000);
         lastNameEdit.clear();
+        Thread.sleep(3000);
         lastNameEdit.sendKeys(lastName);
 
         Thread.sleep(5000);
 
-        driver.findElement(By.cssSelector(".button.submit-button")).click();
+        driver.findElement(By.cssSelector("button.submit-button")).click();
+
+        Thread.sleep(3000);
 
         WebElement nameItem = driver.findElement(By.cssSelector("li[data-ref='name-item']"));
+        Thread.sleep(3000);
         Assert.assertTrue(nameItem.getText().contains(firstName));
 
 
@@ -56,7 +71,7 @@ public class PersonalInformationTest {
 
     @DataProvider(name = "informationData")
     public Object[][] testDataFeed(){
-        int sheetNum = 3;
+        int sheetNum = 4;
         ReadExcelFile config = new ReadExcelFile("takeAlotSheet.xlsx");
 
         int rows = config.getRowCount(sheetNum);

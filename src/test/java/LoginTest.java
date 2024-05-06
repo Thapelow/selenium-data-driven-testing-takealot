@@ -39,15 +39,15 @@ public class LoginTest {
 
     @DataProvider(name = "loginData")
     private Object[][] TestDataFeed(){
-
+        int sheetNum = 1;
         ReadExcelFile config = new ReadExcelFile("takeAlotSheet.xlsx");
 
-        int rows = config.getRowCount(1);
+        int rows = config.getRowCount(sheetNum);
         Object[][] regData = new Object[rows][2];
 
         for (int i = 0; i < rows; i++) {
-            regData[i][0] = config.getData(1,i,0);
-            regData[i][1] = config.getData(1,i,1);
+            regData[i][0] = config.getData(sheetNum,i,0);
+            regData[i][1] = config.getData(sheetNum,i,1);
         }
 
         return regData;

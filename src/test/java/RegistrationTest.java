@@ -49,18 +49,18 @@ public class RegistrationTest {
 
     @DataProvider(name = "registrationData")
     private Object[][] TestDataFeed(){
-
+        int sheetNum = 0;
         ReadExcelFile config = new ReadExcelFile("takeAlotSheet.xlsx");
-        int rows = config.getRowCount(0);
+        int rows = config.getRowCount(sheetNum);
 
         Object[][] regData = new Object[rows][5];
 
         for (int i = 0; i < rows; i++) {
-            regData[i][0] = config.getData(0,i,0);
-            regData[i][1] = config.getData(0,i,1);
-            regData[i][2] = config.getData(0,i,2);
-            regData[i][3] = config.getData(0,i,3);
-            regData[i][4] = config.getData(0,i,4);
+            regData[i][0] = config.getData(sheetNum,i,0);
+            regData[i][1] = config.getData(sheetNum,i,1);
+            regData[i][2] = config.getData(sheetNum,i,2);
+            regData[i][3] = config.getData(sheetNum,i,3);
+            regData[i][4] = config.getData(sheetNum,i,4);
         }
         return  regData;
     }

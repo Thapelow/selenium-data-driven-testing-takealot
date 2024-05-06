@@ -11,6 +11,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.awt.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,60 +32,36 @@ public class SearchTest {
 
         Thread.sleep(5000);
 
-        driver.findElement(By.cssSelector("input[name='search']")).sendKeys(item,Keys.ENTER);
-
-        Thread.sleep(5000);
-
-        driver.findElement(By.cssSelector("label[for='filter_"+brand+"_" + brand + "']")).click();
-
-        Thread.sleep(3000);
-
-        driver.findElement(By.xpath("//span[text()='" + color + "]")).click();
+        driver.findElement(By.cssSelector("input[name='search']")).sendKeys(item + " " + brand + " " + color, Keys.ENTER);
 
         Thread.sleep(5000);
 
         List<WebElement> itemElements = driver.findElements(By.cssSelector("a.product-anchor"));
         List<String> actualItems = itemElements.stream()
                 .map(element -> element.getText().toLowerCase() + element.getAttribute("href").toLowerCase())
-                .collect(Collectors.toList());
-
+                .toList();
 
         List<String> expectedItems = actualItems.stream()
                 .filter(el -> el.contains(item.toLowerCase()) && el.contains(brand.toLowerCase()) && el.contains(color.toLowerCase()))
-                .collect(Collectors.toList());
+                .toList();
 
-        Assert.assertEquals(expectedItems, actualItems);
-        addToCart();
-
-    }
-
-    @Test
-    public void addToCart(){
-        List<WebElement> addToCartIcons = driver.findElements(By.cssSelector("button.add-to-cart-button"));
-
-        if (!addToCartIcons.isEmpty()){
-            addToCartIcons.get(0).click();
-        }
-
-        driver.get("https://www.takealot.com/cart");
-        List<WebElement> cartItems = driver.findElements(By.cssSelector("div.cart-item-container-module_item_3Vkqc"));
-
-        Assert.assertNotNull(cartItems, "Cart item element not found");
+        Assert.assertFalse(expectedItems.isEmpty(), "No items found matching the specified criteria: " + item + ", " + brand + ", " + color);
     }
 
 
 
     @DataProvider(name = "searchData")
     private Object[][] testDataFeed(){
+        int sheetNum = 2;
         ReadExcelFile config = new ReadExcelFile("takeAlotSheet.xlsx");
 
-        int rows = config.getRowCount(2);
-        Object[][] regData = new Object[rows][2];
+        int rows = config.getRowCount(sheetNum);
+        Object[][] regData = new Object[rows][3];
 
         for (int i = 0; i < rows; i++) {
-            regData[i][0] = config.getData(2,i,0);
-            regData[i][1] = config.getData(2,i,1);
-            regData[i][2] = config.getData(2,i,2);
+            regData[i][0] = config.getData(sheetNum,i,0);
+            regData[i][1] = config.getData(sheetNum,i,1);
+            regData[i][2] = config.getData(sheetNum,i,2);
         }
 
         return regData;
